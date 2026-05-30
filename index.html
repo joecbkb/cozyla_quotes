@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cozyla Quotes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Nunito:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+    }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: #fdf6ee;
+      color: #4a3728;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 20% 80%, rgba(232, 196, 155, 0.35) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 20%, rgba(200, 170, 210, 0.2) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 50%, rgba(255, 218, 185, 0.15) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .dots {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .dot {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.12;
+      animation: float 20s ease-in-out infinite;
+    }
+
+    .dot:nth-child(1) { width: 300px; height: 300px; background: #e8c49b; top: -80px; left: -60px; animation-delay: 0s; }
+    .dot:nth-child(2) { width: 200px; height: 200px; background: #c8aad2; bottom: -40px; right: -30px; animation-delay: -7s; }
+    .dot:nth-child(3) { width: 150px; height: 150px; background: #f0c4a8; top: 30%; right: 10%; animation-delay: -13s; }
+    .dot:nth-child(4) { width: 250px; height: 250px; background: #b5d8c7; bottom: 10%; left: 15%; animation-delay: -4s; }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-30px) scale(1.05); }
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 720px;
+      width: 90%;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .ornament {
+      font-size: 2.5rem;
+      color: #d4a574;
+      opacity: 0.6;
+      line-height: 1;
+      margin-bottom: 1rem;
+      letter-spacing: 0.5em;
+      user-select: none;
+    }
+
+    .quote-card {
+      position: relative;
+      padding: 2.5rem 2rem;
+    }
+
+    .quote-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.5rem, 4vw, 2.4rem);
+      font-weight: 400;
+      font-style: italic;
+      line-height: 1.5;
+      color: #3e2c1e;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .quote-text.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .quote-text::before {
+      content: '\201C';
+      font-size: 3em;
+      line-height: 0;
+      vertical-align: -0.3em;
+      color: #d4a574;
+      opacity: 0.5;
+      margin-right: 0.05em;
+    }
+
+    .quote-text::after {
+      content: '\201D';
+      font-size: 3em;
+      line-height: 0;
+      vertical-align: -0.3em;
+      color: #d4a574;
+      opacity: 0.5;
+      margin-left: 0.05em;
+    }
+
+    .author {
+      font-family: 'Nunito', sans-serif;
+      font-size: clamp(0.9rem, 2vw, 1.1rem);
+      font-weight: 600;
+      color: #8b6f5a;
+      letter-spacing: 0.08em;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.8s ease 0.2s, transform 0.8s ease 0.2s;
+    }
+
+    .author.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .author::before {
+      content: '\2014\00a0';
+    }
+
+    .divider {
+      width: 60px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #d4a574, transparent);
+      margin: 1.2rem auto;
+      opacity: 0;
+      transition: opacity 0.8s ease 0.1s;
+    }
+
+    .divider.visible {
+      opacity: 0.6;
+    }
+
+    .controls {
+      margin-top: 2rem;
+      display: flex;
+      justify-content: center;
+      gap: 0.75rem;
+      opacity: 0;
+      transition: opacity 0.5s ease 1s;
+    }
+
+    .controls.visible {
+      opacity: 1;
+    }
+
+    .btn {
+      background: none;
+      border: 1.5px solid rgba(212, 165, 116, 0.4);
+      color: #8b6f5a;
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      padding: 0.5rem 1.2rem;
+      border-radius: 100px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn:hover {
+      background: rgba(212, 165, 116, 0.15);
+      border-color: rgba(212, 165, 116, 0.7);
+    }
+
+    .error {
+      font-family: 'Nunito', sans-serif;
+      font-size: 1rem;
+      color: #b07a5b;
+    }
+
+    .progress-ring {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      width: 36px;
+      height: 36px;
+      opacity: 0.3;
+    }
+
+    .progress-ring circle {
+      fill: none;
+      stroke-width: 2.5;
+    }
+
+    .progress-ring .bg {
+      stroke: #d4a574;
+      opacity: 0.3;
+    }
+
+    .progress-ring .fg {
+      stroke: #d4a574;
+      stroke-linecap: round;
+      transform: rotate(-90deg);
+      transform-origin: center;
+      transition: stroke-dashoffset 1s linear;
+    }
+  </style>
+</head>
+<body>
+  <div class="dots">
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+  </div>
+
+  <div class="container">
+    <div class="ornament">&#10045; &#10045; &#10045;</div>
+    <div class="quote-card">
+      <div class="quote-text" id="quote"></div>
+      <div class="divider" id="divider"></div>
+      <div class="author" id="author"></div>
+    </div>
+    <div class="controls" id="controls">
+      <button class="btn" id="nextBtn">Next Quote</button>
+    </div>
+  </div>
+
+  <svg class="progress-ring" id="progressRing">
+    <circle class="bg" cx="18" cy="18" r="15" />
+    <circle class="fg" id="progressCircle" cx="18" cy="18" r="15"
+      stroke-dasharray="94.25" stroke-dashoffset="0" />
+  </svg>
+
+  <script>
+    const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT8621JTtpb0DL-2z-F-Y832p8gelVh7K5GEuGdrAPK37Dh_9D-driEl2yoM7Te0FmKmETkz1SlvKZU/pub?gid=0&single=true&output=csv';
+    const PROXY_URL = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(SHEET_URL);
+    const ROTATE_MS = 30 * 60 * 1000;
+
+    const quoteEl = document.getElementById('quote');
+    const authorEl = document.getElementById('author');
+    const dividerEl = document.getElementById('divider');
+    const controlsEl = document.getElementById('controls');
+    const nextBtn = document.getElementById('nextBtn');
+    const progressCircle = document.getElementById('progressCircle');
+
+    const CIRCUMFERENCE = 2 * Math.PI * 15;
+    progressCircle.style.strokeDasharray = CIRCUMFERENCE;
+
+    let quotes = [];
+    let currentIndex = -1;
+    let rotateTimer = null;
+    let progressStart = 0;
+    let progressRAF = null;
+
+    function parseCSV(text) {
+      const lines = text.trim().split('\n');
+      if (lines.length < 2) return [];
+
+      const result = [];
+      for (let i = 1; i < lines.length; i++) {
+        const row = parseCSVRow(lines[i]);
+        if (row.length >= 2 && row[0].trim()) {
+          result.push({ text: row[0].trim(), author: row[1].trim() || 'Unknown' });
+        }
+      }
+      return result;
+    }
+
+    function parseCSVRow(line) {
+      const fields = [];
+      let current = '';
+      let inQuotes = false;
+
+      for (let i = 0; i < line.length; i++) {
+        const ch = line[i];
+        if (inQuotes) {
+          if (ch === '"') {
+            if (i + 1 < line.length && line[i + 1] === '"') {
+              current += '"';
+              i++;
+            } else {
+              inQuotes = false;
+            }
+          } else {
+            current += ch;
+          }
+        } else if (ch === '"') {
+          inQuotes = true;
+        } else if (ch === ',') {
+          fields.push(current);
+          current = '';
+        } else {
+          current += ch;
+        }
+      }
+      fields.push(current);
+      return fields;
+    }
+
+    function pickRandom() {
+      if (quotes.length <= 1) return 0;
+      let idx;
+      do { idx = Math.floor(Math.random() * quotes.length); } while (idx === currentIndex);
+      return idx;
+    }
+
+    function showQuote(index) {
+      currentIndex = index;
+      const q = quotes[index];
+
+      quoteEl.classList.remove('visible');
+      authorEl.classList.remove('visible');
+      dividerEl.classList.remove('visible');
+
+      setTimeout(() => {
+        quoteEl.textContent = q.text;
+        authorEl.textContent = q.author;
+        quoteEl.classList.add('visible');
+        dividerEl.classList.add('visible');
+        authorEl.classList.add('visible');
+      }, 400);
+
+      startProgress();
+    }
+
+    function startProgress() {
+      clearTimeout(rotateTimer);
+      cancelAnimationFrame(progressRAF);
+      progressStart = Date.now();
+      progressCircle.style.strokeDashoffset = 0;
+      updateProgress();
+      rotateTimer = setTimeout(() => showQuote(pickRandom()), ROTATE_MS);
+    }
+
+    function updateProgress() {
+      const elapsed = Date.now() - progressStart;
+      const fraction = Math.min(elapsed / ROTATE_MS, 1);
+      progressCircle.style.strokeDashoffset = CIRCUMFERENCE * fraction;
+      if (fraction < 1) {
+        progressRAF = requestAnimationFrame(updateProgress);
+      }
+    }
+
+    async function fetchQuotes() {
+      let csv;
+      try {
+        const resp = await fetch(SHEET_URL);
+        csv = await resp.text();
+      } catch {
+        const resp = await fetch(PROXY_URL);
+        csv = await resp.text();
+      }
+      return parseCSV(csv);
+    }
+
+    async function init() {
+      try {
+        quotes = await fetchQuotes();
+        if (quotes.length === 0) {
+          quoteEl.innerHTML = '<span class="error">No quotes found in the spreadsheet.</span>';
+          quoteEl.classList.add('visible');
+          return;
+        }
+        showQuote(pickRandom());
+        controlsEl.classList.add('visible');
+      } catch (err) {
+        quoteEl.innerHTML = '<span class="error">Could not load quotes. Please try again later.</span>';
+        quoteEl.classList.add('visible');
+        console.error('Failed to fetch quotes:', err);
+      }
+    }
+
+    nextBtn.addEventListener('click', () => showQuote(pickRandom()));
+    init();
+  </script>
+</body>
+</html>
